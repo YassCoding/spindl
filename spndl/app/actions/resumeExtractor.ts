@@ -2,6 +2,7 @@
 
 import { createClient } from "@/lib/supabase/server";
 import { GoogleGenAI } from "@google/genai";
+import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 
@@ -93,6 +94,8 @@ export async function resumeExtractor(formData:FormData){
             return { success: false, error: "Failed to save profile data." };
         }
         
-        
+        const cookieStore = await cookies();
+        cookieStore.set("spindl_stage", "1");
+
         return {success:true}
 }

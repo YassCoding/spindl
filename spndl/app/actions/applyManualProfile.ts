@@ -1,6 +1,7 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
+import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 
@@ -40,6 +41,9 @@ export async function applyManualProfile(formData: any) {
     return { error: "Failed to save profile." };
   }
 
+  const cookieStore = await cookies();
+  cookieStore.set("spindl_stage", "2");
+
   // redirect to home
-  redirect("/");
+  redirect("/homepage");
 }
