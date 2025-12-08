@@ -1,5 +1,5 @@
 import GitHubLoginButton from "./GitHubLoginButton";
-import Logo from "./Logo";
+import Logo from "../Style/Logo";
 
 
 

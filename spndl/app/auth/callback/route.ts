@@ -17,6 +17,28 @@ export async function GET(request: Request) {
     if (!error) {
       const forwardedHost = request.headers.get('x-forwarded-host') // original origin before load balancer
       const isLocalEnv = process.env.NODE_ENV === 'development'
+
+      const {data: {user}} = await supabase.auth.getUser();
+      if(user){
+        const {data: profile} = await supabase
+                                .from('profiles')
+                                .select('onboarding_stage')
+                                .eq('id', user.id)
+                                .single();
+
+        if (profile){
+          if(profile.onboarding_stage == 0){
+            next = '/onboarding/resumeautofiller';
+          }
+          else if(profile.onboarding_stage == 1){
+            next = '/onboarding/manualprofilefill';
+          }
+          else{
+            next = '/';
+          }
+        }
+        
+      }
       if (isLocalEnv) {
         // we can be sure that there is no load balancer in between, so no need to watch for X-Forwarded-Host
         return NextResponse.redirect(`${origin}${next}`)

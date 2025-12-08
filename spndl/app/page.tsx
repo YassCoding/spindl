@@ -1,5 +1,5 @@
-import BackgroundMap from "@/components/BackgroundMap";
-import Hero from "@/components/Hero";
+import BackgroundMap from "@/components/Style/BackgroundMap";
+import Hero from "@/components/Landing/Hero";
 
 export default function Home() {
   return (
