@@ -14,7 +14,7 @@ Spindl: Build careers together
 Clone repository and install dependencies:
 
 ```bash
-git clone [https://github.com/YassCoding/spindl.git](https://github.com/YassCoding/spindl.git)
+git clone https://github.com/YassCoding/spindl.git
 cd spindl
 npm install
 ```
