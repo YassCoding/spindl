@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Loader2, ArrowRight, History, Gamepad2 } from "lucide-react";
-import { createLobby, joinLobby } from "@/app/actions/lobbyActions";
+import { createLobby, joinLobby } from "@/app/actions/createJoinGame";
 import Link from "next/link";
 
 export default function HomeMenu({ currentRoom }: { currentRoom?: string | null }) {
@@ -32,7 +32,6 @@ export default function HomeMenu({ currentRoom }: { currentRoom?: string | null 
   return (
     <div className="flex flex-col gap-6 w-full max-w-md relative z-10">
       
-      {/* 1. REJOIN BANNER (If applicable) */}
       {currentRoom && (
         <div className="w-full p-4 rounded-2xl bg-primary/20 border border-primary/50 flex items-center justify-between mb-4 animate-in slide-in-from-top-4">
           <div>
@@ -48,13 +47,12 @@ export default function HomeMenu({ currentRoom }: { currentRoom?: string | null 
         </div>
       )}
 
-      {/* 2. JOIN GAME SECTION */}
       <div className="relative group">
         <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/50 to-purple-600/50 rounded-2xl blur opacity-30 group-hover:opacity-60 transition duration-500"></div>
         <div className="relative flex flex-col gap-4 p-6 bg-surface-dark/90 backdrop-blur-xl border border-white/10 rounded-2xl">
             <h2 className="text-white text-lg font-bold flex items-center gap-2">
                 <Gamepad2 className="text-primary-light" size={20}/> 
-                Join an Expedition
+                Join a Game
             </h2>
             
             <form action={handleJoin} className="flex flex-col gap-3">
@@ -78,7 +76,6 @@ export default function HomeMenu({ currentRoom }: { currentRoom?: string | null 
         </div>
       </div>
 
-      {/* 3. CREATE GAME BUTTON */}
       <button 
         onClick={handleCreate}
         disabled={isCreating}
@@ -93,12 +90,11 @@ export default function HomeMenu({ currentRoom }: { currentRoom?: string | null 
             )}
         </span>
       </button>
-
-      {/* 4. PAST GAMES LINK */}
+{/*
       <Link href="/gallery" className="text-white/40 hover:text-white text-sm font-medium flex items-center justify-center gap-2 transition-colors py-2">
         <History size={16}/> View Past Games
       </Link>
-
+*/}
     </div>
   );
 }

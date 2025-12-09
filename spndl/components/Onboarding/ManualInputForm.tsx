@@ -28,7 +28,6 @@ export default function ManualInputForm({ initialSkills }: ManualFormProps) {
       return () => window.removeEventListener("mousemove", handleMouseMove);
   }, []);
 
-  // Convert object array to string array for the UI
   const [skillTags, setSkillTags] = useState<SkillTag[]>(
     initialSkills.map(s => ({ skill: s.skill, experience_level: s.experience_level || "Mid" }))
 );
@@ -51,12 +50,9 @@ export default function ManualInputForm({ initialSkills }: ManualFormProps) {
 };
 
   return (
-    // Changed wrapper: No longer 'flex gap-6'. Now just centers the content.
     <div className="relative w-full max-w-4xl px-4 flex justify-center">
       
-      {/* MAIN CARD WRAPPER */}
       <div className="relative group w-full">
-        {/* GLOW LAYER 1 (Stronger Ambient) - Increased opacity to 0.6 and size to 1000px */}
         <div
           className="absolute -inset-1 rounded-3xl opacity-60 blur-3xl transition-opacity duration-500 pointer-events-none"
           style={{
@@ -64,7 +60,6 @@ export default function ManualInputForm({ initialSkills }: ManualFormProps) {
           }}
         />
 
-        {/* GLOW LAYER 2 (Stronger Border) - Increased opacity to 1.0 */}
         <div
           className="absolute -inset-[1.5px] rounded-3xl opacity-100 transition-opacity duration-500 pointer-events-none"
           style={{
@@ -72,7 +67,6 @@ export default function ManualInputForm({ initialSkills }: ManualFormProps) {
           }}
         />
 
-        {/* ACTUAL CARD CONTENT */}
         <div
           ref={cardRef}
           className="relative flex flex-col w-full p-8 sm:p-10 bg-surface-dark/95 backdrop-blur-xl rounded-3xl border border-white/5 shadow-[0_0_50px_rgba(0,0,0,0.5)]"
@@ -138,7 +132,6 @@ export default function ManualInputForm({ initialSkills }: ManualFormProps) {
         </div>
       </div>
 
-      {/* SIDE ACTION BUTTON - Now Positioned Absolutely to avoid shifting layout */}
       <button
         onClick={handleSubmit}
         disabled={isSubmitting}
@@ -151,7 +144,6 @@ export default function ManualInputForm({ initialSkills }: ManualFormProps) {
         )}
       </button>
 
-      {/* Mobile Button (Visible only on small screens) */}
       <div className="fixed bottom-6 inset-x-6 sm:hidden z-50">
         <button
           onClick={handleSubmit}

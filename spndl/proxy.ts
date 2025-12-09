@@ -3,18 +3,13 @@ import { createServerClient } from "@supabase/ssr";
 import { type NextRequest, NextResponse } from "next/server";
 
 export async function proxy(request: NextRequest) {
-  // 1. Setup Supabase Client
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!,
     {
       cookies: {
-        getAll() {
-          return request.cookies.getAll();
-        },
-        setAll(cookiesToSet) {
-          // Handled by updateSession later
-        },
+        getAll() { return request.cookies.getAll(); },
+        setAll(cookiesToSet) {},
       },
     }
   );
@@ -22,16 +17,16 @@ export async function proxy(request: NextRequest) {
   const { data: { user } } = await supabase.auth.getUser();
   const path = request.nextUrl.pathname;
 
+  // 1. Unauthenticated Guard
   if (!user) {
     if (path.startsWith("/homepage") || path.startsWith("/onboarding") || path.startsWith("/lobby")) {
       return NextResponse.redirect(new URL("/", request.url));
     }
     return await updateSession(request);
   }
-  
-  let stage: number;
-  let shouldSetCookie = false;
 
+  // 2. Authenticated Guard
+  let stage: number;
   const stageCookie = request.cookies.get("spindl_stage");
 
   if (stageCookie) {
@@ -42,39 +37,34 @@ export async function proxy(request: NextRequest) {
       .select("onboarding_stage")
       .eq("id", user.id)
       .single();
-
     stage = profile?.onboarding_stage ?? 0;
-    shouldSetCookie = true;
   }
 
+  // Define Paths
   let targetPath = "/homepage";
   if (stage === 0) targetPath = "/onboarding/resumeautofiller";
   else if (stage === 1) targetPath = "/onboarding/manualprofilefill";
-  else if (stage === 2) targetPath = "/homepage"; 
-
-  let response: NextResponse | null = null;
-
-  if (stage < 3 && path !== targetPath) {
-     response = NextResponse.redirect(new URL(targetPath, request.url));
-  }
-
-  else if (stage >= 3 && (path === "/" || path.startsWith("/onboarding"))) {
-     response = NextResponse.redirect(new URL("/homepage", request.url));
-  }
-
-  if (response) {
-    if (shouldSetCookie) {
-      response.cookies.set("spindl_stage", stage.toString(), { maxAge: 60 * 60 * 24 }); // Cache for 24h
-    }
-    return response;
-  }
-
-  const sessionResponse = await updateSession(request);
-  if (shouldSetCookie) {
-    sessionResponse.cookies.set("spindl_stage", stage.toString(), { maxAge: 60 * 60 * 24 });
-  }
   
-  return sessionResponse;
+  // --- THE FIX: ALLOW LOBBY ACCESS ---
+  const isLobbyOrGame = path.startsWith("/lobby") || path.startsWith("/game");
+  const isDoneOnboarding = stage >= 2;
+
+  // Rule A: Locked in Onboarding (Strict)
+  if (!isDoneOnboarding && path !== targetPath) {
+     return NextResponse.redirect(new URL(targetPath, request.url));
+  }
+
+  // Rule B: Done Onboarding (Allow Dashboard + Game Routes)
+  if (isDoneOnboarding && (path === "/" || path.startsWith("/onboarding"))) {
+     return NextResponse.redirect(new URL("/homepage", request.url));
+  }
+
+  // Rule C: Protect Game Routes from non-onboarded users
+  if (isLobbyOrGame && !isDoneOnboarding) {
+    return NextResponse.redirect(new URL(targetPath, request.url));
+  }
+
+  return await updateSession(request);
 }
 
 export const config = {

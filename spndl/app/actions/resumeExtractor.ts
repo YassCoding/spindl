@@ -75,27 +75,53 @@ export async function resumeExtractor(formData:FormData){
 
     const result = extractedResume.parse(JSON.parse(response.text!));
 
-        const {data: {user}, error: userError} = await supabase.auth.getUser();
+    const {data: {user}, error: userError} = await supabase.auth.getUser();
 
-        if(userError || !user){
-            redirect('/')
-        }
+    if(userError || !user){
+        redirect('/')
+    }
 
-        const {error:updateError} = await supabase
-                .from('profiles')
-                .update({
-                    skills: result.skills,
-                    role_interest: result.interests,
-                    onboarding_stage: 1
-                })
-                .eq('id', user.id)
+    const {error:updateError} = await supabase
+            .from('profiles')
+            .update({
+                skills: result.skills,
+                role_interest: result.interests,
+                onboarding_stage: 1
+            })
+            .eq('id', user.id)
 
-        if(updateError){
-            return { success: false, error: "Failed to save profile data." };
-        }
-        
-        const cookieStore = await cookies();
-        cookieStore.set("spindl_stage", "1");
+    if(updateError){
+        return { success: false, error: "Failed to save profile data." };
+    }
+    
+    const cookieStore = await cookies();
+    cookieStore.set("spindl_stage", "1");
 
-        return {success:true}
+    return {success:true}
+}
+
+export async function skipExtractor(){
+    const supabase = await createClient();
+
+    const {data: {user}, error: userError} = await supabase.auth.getUser();
+
+    if(userError || !user){
+        redirect('/')
+    }
+
+    const {error:updateError} = await supabase
+            .from('profiles')
+            .update({
+                onboarding_stage: 1
+            })
+            .eq('id', user.id)
+
+    if(updateError){
+        return { success: false, error: "Failed to save profile data." };
+    }
+    
+    const cookieStore = await cookies();
+    cookieStore.set("spindl_stage", "1");
+
+    redirect("/onboarding/manualprofilefill");
 }

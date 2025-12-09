@@ -1,9 +1,8 @@
 "use client";
 
-import { X, Plus, Trash2 } from "lucide-react"; // Added Trash2
+import { X, Plus, Trash2 } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 
-// Define the shape of a Skill Object
 export interface SkillTag {
   skill: string;
   experience_level: string;
@@ -11,21 +10,18 @@ export interface SkillTag {
 
 interface InputTagProps {
   label: string;
-  // Accepts simple strings (Hobbies) OR complex objects (Skills)
   tags: (string | SkillTag)[]; 
   onTagsChange: (newTags: any[]) => void;
   placeholder?: string;
-  isSkillInput?: boolean; // Flag to enable the level hover logic
+  isSkillInput?: boolean; 
 }
 
 export default function InputTag({ label, tags, onTagsChange, placeholder, isSkillInput }: InputTagProps) {
   const [inputValue, setInputValue] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
-  const containerRef = useRef<HTMLDivElement>(null); // To detect clicks on container
+  const containerRef = useRef<HTMLDivElement>(null); 
 
-  // FOCUS: Click anywhere on container to focus input
   const handleContainerClick = (e: React.MouseEvent) => {
-    // Prevent focus if clicking a button or tag
     if (e.target === containerRef.current || e.target === inputRef.current) {
       inputRef.current?.focus();
     }
@@ -34,17 +30,14 @@ export default function InputTag({ label, tags, onTagsChange, placeholder, isSki
   const addTag = () => {
     if (!inputValue.trim()) return;
     
-    // Check duplicates
     const exists = tags.some(t => 
       typeof t === 'string' ? t === inputValue.trim() : t.skill === inputValue.trim()
     );
 
     if (!exists) {
       if (isSkillInput) {
-        // Add as Object with default level
         onTagsChange([...tags, { skill: inputValue.trim(), experience_level: "Mid" }]);
       } else {
-        // Add as String
         onTagsChange([...tags, inputValue.trim()]);
       }
       setInputValue("");
@@ -62,7 +55,6 @@ export default function InputTag({ label, tags, onTagsChange, placeholder, isSki
     onTagsChange(tags.filter((_, i) => i !== indexToRemove));
   };
 
-  // CLEAR ALL BUTTON
   const clearAll = () => {
     onTagsChange([]);
   };
@@ -72,7 +64,6 @@ export default function InputTag({ label, tags, onTagsChange, placeholder, isSki
       <div className="flex justify-between items-end ml-1">
         <label className="text-white/80 text-sm font-medium">{label}</label>
         {tags.length > 0 && (
-            // TOOLTIP: Using browser 'title' for simplicity, or simple group-hover approach
             <button 
                 onClick={clearAll} 
                 title="Clear all items"
@@ -88,7 +79,7 @@ export default function InputTag({ label, tags, onTagsChange, placeholder, isSki
         onClick={handleContainerClick}
         className="relative group rounded-xl bg-white/5 border border-white/10 focus-within:border-primary/50 focus-within:bg-white/10 transition-all duration-300 p-2 cursor-text min-h-[50px]"
       >
-        <div className="flex flex-wrap gap-2 pointer-events-none"> {/* pointer-events-none to let container handle background clicks, children re-enable events */}
+        <div className="flex flex-wrap gap-2 pointer-events-none"> 
           {tags.map((tag, index) => (
             <ItemTag 
                 key={index} 
@@ -128,11 +119,9 @@ export default function InputTag({ label, tags, onTagsChange, placeholder, isSki
   );
 }
 
-// Sub-component for individual tags to handle the "Hover Logic" cleanly
 function ItemTag({ tag, index, removeTag, isSkillInput, updateTag }: any) {
     const [isHovering, setIsHovering] = useState(false);
     
-    // We use two timers: one for opening delay (optional) and one for closing safety
     const openTimer = useRef<NodeJS.Timeout | null>(null);
     const closeTimer = useRef<NodeJS.Timeout | null>(null);
 
@@ -143,18 +132,13 @@ function ItemTag({ tag, index, removeTag, isSkillInput, updateTag }: any) {
     const handleMouseEnter = () => {
         if (!isSkillInput) return;
         
-        // If we were about to close, CANCEL IT. The user came back!
         if (closeTimer.current) clearTimeout(closeTimer.current);
-        
-        // Open immediately or with a tiny delay if you prefer
-        // Currently setting immediate for snappier feel since we have a safety close now
         setIsHovering(true);
     };
 
     const handleMouseLeave = () => {
         if (!isSkillInput) return;
 
-        // Don't close immediately. Wait 300ms to let user cross the gap to the menu.
         closeTimer.current = setTimeout(() => {
             setIsHovering(false);
         }, 300);
@@ -186,14 +170,11 @@ function ItemTag({ tag, index, removeTag, isSkillInput, updateTag }: any) {
                 <X size={14} />
             </button>
 
-            {/* HOVER MENU */}
             {isHovering && isSkillInput && (
                 <div 
                     onClick={(e) => e.stopPropagation()} // Stop delete click
-                    // Added z-50 and a transparent 'bridge' area if needed, but timeout handles it mostly
                     className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 z-50 flex flex-col bg-surface-dark border border-white/20 rounded-lg shadow-xl overflow-hidden min-w-[100px]"
                 >
-                    {/* Tiny arrow pointing down */}
                     <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-surface-dark border-r border-b border-white/20 rotate-45"></div>
 
                     {["College-Level", "Junior", "Mid", "Senior"].map((lvl) => (
