@@ -1,6 +1,42 @@
 # spindl
 Spindl: Build careers together
 
+<details>
+  <summary>Screenshot Previews</summary>
+  <details>
+    <summary>Pre-Game</summary>
+    Home Page:  
+    <img src="./spndl/readmeAssets/preGame/LandingPage.jpeg" alt="Home Screen"/>
+    Autofill Page:  
+    <img src="./spndl/readmeAssets/preGame/AddResume.jpeg" alt="Autofill Screen"/>
+    Skill Page:  
+    <img src="./spndl/readmeAssets/preGame/AutofillSkillPage.jpeg" alt="Skill Screen"/>
+    Landing Page:  
+    <img src="./spndl/readmeAssets/preGame/HomePage.jpeg" alt="Landing Screen"/>
+  </details>
+  <details>
+    <summary>Lobby</summary>
+    Lobby Page:  
+    <img src="./spndl/readmeAssets/game/LobbyScreen.jpeg" alt="Lobby Screen"/>
+    Inspect Profile Modal:  
+    <img src="./spndl/readmeAssets/game/SkillsOverview.jpeg" alt="Inspect Profile Modal"/>
+  </details>
+  <details>
+    <summary>Game</summary>
+    Round 1 Page:  
+    <img src="./spndl/readmeAssets/game/Round1.jpeg" alt="Round 1 Screen"/>
+    Round 1 End Page:  
+    <img src="./spndl/readmeAssets/game/EndOfRound1.jpeg" alt="Round 1 End Screen"/>
+    Round 2 Page:  
+    <img src="./spndl/readmeAssets/game/Round2.jpeg" alt="Round 2 Screen"/>
+    Leaderboard Page:  
+    <img src="./spndl/readmeAssets/game/WinScreen.jpeg" alt="Win Screen"/>
+    Inspect Idea Page:  
+    <img src="./spndl/readmeAssets/game/WinSummary.jpeg" alt="Inspect Idea Screen"/>
+  </details>
+</details>
+</details>
+
 ## Getting Started
 
 ### 1. Prerequisites
